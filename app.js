@@ -3,7 +3,12 @@ const bodyParser = require('body-parser');
 const app = express();
 
 
-app.use(express.static('public'));
-app.use(express.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
+//Call Routes
+
+let routes = require('./routes')
+routes(app);
 
 app.listen(3000);
