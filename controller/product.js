@@ -1,7 +1,7 @@
 'use sctrict'
 
-let response = require('../helper/resJson');
-let postgre = require('../service/connection');
+const response = require('../helper/resJson');
+const postgre = require('../service/connection');
 const { body, validationResult } = require('express-validator');
 
 exports.index = (req, res) => {
@@ -48,7 +48,6 @@ exports.postBarang = {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 console.log(errors)
-                console.log(errors.errors[0].msg)
                 response.json(400, false, errors.errors[0].msg, res);
             } else {
                 postgre.query('INSERT INTO barang (nama,deskripsi,harga) VALUES ($1,$2,$3)',[nama,deskripsi,harga],
@@ -81,7 +80,6 @@ exports.editBarang = {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 console.log(errors)
-                console.log(errors.errors[0].msg)
                 response.json(400, false, errors.errors[0].msg, res);
             } else {
                 postgre.query('UPDATE barang SET nama=$1, deskripsi=$2, harga=$3 WHERE id=$4',[nama,deskripsi,harga,id],
