@@ -9,5 +9,9 @@ module.exports = (app) => {
 
     app.route('/barang/:id').get(product.getBarangId);
 
-    app.route('/barang/').post(product.postBarang);
+    app.route('/barang/').post(product.postBarang.content);
+
+    app.route('/barang/').put(product.editBarang.content);
+
+    app.route('/barang/').delete(product.deleteBarang);
 }
