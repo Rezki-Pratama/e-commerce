@@ -62,3 +62,63 @@ exports.register = {
         }
     ]
 }
+
+exports.login = (req, res) => {
+    let post = {
+        password: req.body.password,
+        email: req.body.email
+    }
+
+    postgre.query('SELECT * FROM users WHERE password = $1 AND email=$2',
+    [
+        md5(post.password),
+        post.email],(error,result) => {
+           if(error){
+               console.log(error);
+           } else {
+            if(Array.isArray(result.rows) && result.rows.length) {
+                //Create access token with JWT
+                let data = result.rows;
+                let token = jwt.sign({data}, config.secret,{
+                   expiresIn: 1440 
+                });
+                id_user = data[0].id;
+                let inputData = {
+                    id_user:id_user,
+                    access_token: token,
+                    ip_address: ip.address()
+                }
+
+                postgre.query('INSERT INTO access_token (id_user,access_token,ip_address) VALUES ($1,$2,$3)',
+                [
+                    inputData.id_user,
+                    inputData.access_token,
+                    inputData.ip_address
+                ],(error,rows) => {
+                    if(error){
+                        console.log(error);
+                    } else {
+                        res.json({
+                            success: true,
+                            message: 'Token JWT tergenerate !',
+                            token: token,
+                            user: data.id_user  
+                        });
+                    }
+                });
+
+            } else {
+                res.json({
+                    "Error":true,
+                    "Message": "Email atau password salah !"
+                }); 
+            }
+           } 
+        })
+}
+
+exports.secret = (req, res) => {
+     res.json({
+         "Message": "Halaman ini hanya untuk user dengan role 2"
+     });
+}
