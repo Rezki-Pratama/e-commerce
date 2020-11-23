@@ -83,6 +83,7 @@ exports.login = (req, res) => {
                    expiresIn: 1440 
                 });
                 id_user = data[0].id;
+                username = data[0].username;
                 let inputData = {
                     id_user:id_user,
                     access_token: token,
@@ -102,7 +103,8 @@ exports.login = (req, res) => {
                             success: true,
                             message: 'Token JWT tergenerate !',
                             token: token,
-                            user: data.id_user  
+                            user: data.id_user,
+                            username: username  
                         });
                     }
                 });
@@ -110,7 +112,7 @@ exports.login = (req, res) => {
             } else {
                 res.json({
                     "Error":true,
-                    "Message": "Email atau password salah !"
+                    "message": "Email atau password salah !"
                 }); 
             }
            } 

@@ -9,13 +9,18 @@ exports.index = (req, res) => {
 }
 
 exports.getBarang = (req, res) => {
-    postgre.query('SELECT * FROM barang', (error, result, fileds)=>{
-        if(error) {
-            response.json(400, null, 'Data barang gagal diambil', res);
-        } else {
-            response.json(200,result.rows, 'Data barang berhasil diambil', res);
-        }
-    })
+    try {
+        let pagination = req.query.pagination;
+        postgre.query('SELECT * FROM barang ORDER BY id DESC LIMIT 5 OFFSET $1 ;',[pagination], (error, result, fileds)=>{
+            if(error) {
+                response.json(400, null, 'Data barang gagal diambil', res);
+            } else {
+                response.json(200,result.rows, 'Data barang berhasil diambil', res);
+            }
+        })
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 exports.getBarangId = (req, res) => {

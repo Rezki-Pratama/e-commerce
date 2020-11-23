@@ -1,9 +1,8 @@
 const jwt = require('jsonwebtoken');
 const config = require('../helper/generate');
 
-const verification = () => {
+const verification = (role) => {
     return (req, res, next) => {
-        let role = req.body.role;
         let tokenWithBearer = req.headers.authorization;
         console.log(tokenWithBearer);
         if(tokenWithBearer) {

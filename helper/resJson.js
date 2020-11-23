@@ -6,7 +6,6 @@ exports.json = (status, values, message, res) => {
         'message': message,
         'data' : values
     };
-
     res.json(data);
-    res.send();
+    // res.send();
 }
