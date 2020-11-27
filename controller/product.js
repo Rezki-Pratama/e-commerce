@@ -9,17 +9,28 @@ exports.index = (req, res) => {
 }
 
 exports.getBarang = (req, res) => {
-    try {
+    if(req.query.search) {  
+        let search = req.query.search;
+        postgre.query(`SELECT * FROM barang WHERE ( nama LIKE '%${search}%' OR deskripsi LIKE '%${search}%' OR harga::TEXT LIKE '${search}%' )`, (error, result, fileds)=>{
+            
+            if(error) {
+                response.json(400, null, 'Data barang gagal diambil', res);
+                console.log(error)
+            } else {
+                response.json(200,result.rows, 'Data barang berhasil diambil', res);
+                console.log(result.rows)
+            }
+        })
+    } else {
         let pagination = req.query.pagination;
         postgre.query('SELECT * FROM barang ORDER BY id DESC LIMIT 5 OFFSET $1 ;',[pagination], (error, result, fileds)=>{
+            console.log(result.rows)
             if(error) {
                 response.json(400, null, 'Data barang gagal diambil', res);
             } else {
                 response.json(200,result.rows, 'Data barang berhasil diambil', res);
             }
         })
-    } catch (err) {
-        console.log(err)
     }
 }
 
